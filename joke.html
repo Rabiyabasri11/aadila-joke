@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LaughHub | cmi Joke Generator</title>
+
+<style>
+/* ===== GENERAL ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    background: #080810;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+/* Neon background glow */
+body::before {
+    content: "";
+    position: fixed;
+    width: 450px;
+    height: 450px;
+    background: #8b5cf6;
+    filter: blur(180px);
+    opacity: 0.25;
+    top: -100px;
+    left: -100px;
+    pointer-events: none;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    background: #d946ef;
+    filter: blur(180px);
+    opacity: 0.15;
+    bottom: -100px;
+    right: -100px;
+    pointer-events: none;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.container {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(18, 18, 30, 0.95);
+    border: 1px solid #6d28d9;
+    border-radius: 30px;
+    padding: 35px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+
+    box-shadow:
+        0 0 20px rgba(139, 92, 246, 0.2),
+        0 0 60px rgba(139, 92, 246, 0.1);
+}
+
+/* ===== LOGO ===== */
+.logo {
+    font-size: 70px;
+    margin-bottom: 10px;
+    animation: bounce 2s infinite;
+    filter: drop-shadow(0 0 15px #a855f7);
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ===== HEADING ===== */
+h1 {
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #c084fc;
+
+    text-shadow:
+        0 0 10px #a855f7,
+        0 0 25px #7c3aed;
+}
+
+.subtitle {
+    color: #a1a1aa;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 12px 0 25px;
+}
+
+/* ===== JOKE CARD ===== */
+.joke-card {
+    background: #11111e;
+    border: 1px solid #7c3aed;
+    border-radius: 22px;
+    padding: 25px 20px;
+    min-height: 210px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    margin-bottom: 22px;
+
+    box-shadow:
+        inset 0 0 20px rgba(139, 92, 246, 0.08),
+        0 0 15px rgba(139, 92, 246, 0.12);
+}
+
+.joke-tag {
+    display: inline-block;
+    align-self: center;
+    background: #2e1065;
+    color: #d8b4fe;
+    border: 1px solid #8b5cf6;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+#jokeSetup {
+    color: #f5f3ff;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1.6;
+}
+
+#jokeDelivery {
+    color: #e879f9;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.6;
+    margin-top: 15px;
+
+    text-shadow: 0 0 8px rgba(217, 70, 239, 0.3);
+}
+
+/* ===== BUTTONS ===== */
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-bottom: 12px;
+}
+
+.joke-btn {
+    background: linear-gradient(135deg, #7c3aed, #c026d3);
+    color: white;
+
+    box-shadow:
+        0 0 15px rgba(168, 85, 247, 0.4);
+}
+
+.joke-btn:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 0 20px #a855f7,
+        0 0 40px rgba(168, 85, 247, 0.4);
+}
+
+.copy-btn {
+    background: #171325;
+    color: #c084fc;
+    border: 1px solid #7c3aed;
+}
+
+.copy-btn:hover {
+    background: #2e1065;
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    transform: scale(1.02);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== STATUS ===== */
+#status {
+    color: #a78bfa;
+    font-size: 13px;
+    min-height: 22px;
+    margin-top: 8px;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    border-top: 1px solid #27213a;
+    margin-top: 22px;
+    padding-top: 18px;
+    color: #71717a;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.footer span {
+    color: #c084fc;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+    .container {
+        padding: 22px;
+        border-radius: 25px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    #jokeSetup {
+        font-size: 18px;
+    }
+
+    #jokeDelivery {
+        font-size: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Logo -->
+    <div class="logo">😂</div>
+
+    <!-- Heading -->
+    <h1>LaughHub</h1>
+
+    <p class="subtitle">
+        Welcome to the cmi Comedy Zone!
+        <br>
+        Get ready to laugh out loud ✨
+    </p>
+
+    <!-- Joke Card -->
+    <div class="joke-card">
+
+        <div class="joke-tag">
+            ⚡ CMI FUN ZONE
+        </div>
+
+        <p id="jokeSetup">
+            Ready to laugh? Click the button below!
+        </p>
+
+        <p id="jokeDelivery"></p>
+
+    </div>
+
+    <!-- Buttons -->
+    <button class="joke-btn" id="jokeButton">
+        😂 Generate Funny Joke
+    </button>
+
+    <button class="copy-btn" id="copyButton">
+        📋 Copy Joke
+    </button>
+
+    <!-- Status -->
+    <p id="status">
+        💜 Your laughter is loading...
+    </p>
+
+    <!-- Footer -->
+    <div class="footer">
+        Made with <span>💜</span> using HTML, CSS & JavaScript
+        <br>
+        Powered by JokeAPI
+        <br><br>
+        © 2026 LaughHub
+    </div>
+
+</div>
+
+<script>
+
+// ===== HTML ELEMENTS =====
+const jokeButton = document.getElementById("jokeButton");
+const copyButton = document.getElementById("copyButton");
+
+const jokeSetup = document.getElementById("jokeSetup");
+const jokeDelivery = document.getElementById("jokeDelivery");
+
+const statusText = document.getElementById("status");
+
+// ===== JOKE API =====
+const apiURL =
+"https://v2.jokeapi.dev/joke/Any?type=twopart&blacklistFlags=nsfw,religious,political,racist,sexist,explicit";
+
+// ===== FETCH JOKE =====
+async function getJoke() {
+
+    try {
+
+        // Loading state
+        jokeButton.disabled = true;
+        jokeButton.textContent = "⚡ Loading Funny Joke...";
+
+        statusText.textContent = "🔮 Fetching a joke from API...";
+
+        jokeSetup.textContent = "Please wait...";
+        jokeDelivery.textContent = "";
+
+        // Fetch API
+        const response = await fetch(apiURL);
+
+        if (!response.ok) {
+            throw new Error("API request failed");
+        }
+
+        // Convert response into JSON
+        const data = await response.json();
+
+        if (data.error) {
+            throw new Error("Joke API error");
+        }
+
+        // Display joke
+        jokeSetup.textContent = data.setup;
+        jokeDelivery.textContent = data.delivery;
+
+        statusText.textContent = "🤣 Hope you enjoyed the joke!";
+
+    } catch (error) {
+
+        // Error handling
+        jokeSetup.textContent = "Oops! Joke not found.";
+
+        jokeDelivery.textContent =
+        "Check your internet connection and try again.";
+
+        statusText.textContent = "❌ Something went wrong.";
+
+        console.error(error);
+
+    } finally {
+
+        // Reset button
+        jokeButton.disabled = false;
+
+        jokeButton.textContent = "😂 Generate Another Joke";
+
+    }
+
+}
+
+// ===== COPY JOKE =====
+async function copyJoke() {
+
+    const setup = jokeSetup.textContent;
+    const delivery = jokeDelivery.textContent;
+
+    if (!delivery ||
+        setup.includes("Ready to laugh") ||
+        setup.includes("Please wait") ||
+        setup.includes("Oops!")) {
+
+        statusText.textContent = "😄 Generate a joke first!";
+
+        return;
+    }
+
+    const fullJoke = setup + "\n\n" + delivery;
+
+    try {
+
+        await navigator.clipboard.writeText(fullJoke);
+
+        statusText.textContent = "📋 Joke copied successfully!";
+
+    } catch (error) {
+
+        statusText.textContent =
+        "Copy failed. Please copy the joke manually.";
+
+    }
+
+}
+
+// ===== EVENT LISTENERS =====
+jokeButton.addEventListener("click", getJoke);
+
+copyButton.addEventListener("click", copyJoke);
+
+</script>
+
+</body>
+</html>
